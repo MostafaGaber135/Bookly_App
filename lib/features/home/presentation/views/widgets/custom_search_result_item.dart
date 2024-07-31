@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bookly/features/home/data/models/book_model/book_model.dart';
 import 'package:bookly/core/widgets/custom_button.dart';
-import 'package:bookly/core/utils/functions/launch_url.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SearchResultItem extends StatelessWidget {
   final BookModel bookModel;
@@ -65,9 +65,11 @@ class SearchResultItem extends StatelessWidget {
                   ),
                   Expanded(
                     child: CustomButton(
-                      onPressed: () {
-                        launchCustomUrl(
-                            context, bookModel.volumeInfo.previewLink);
+                      onPressed: () async {
+                        Uri uri = Uri.parse(bookModel.volumeInfo.previewLink!);
+                        if (await canLaunchUrl(uri)) {
+                          await canLaunchUrl(uri);
+                        }
                       },
                       fontSize: 16,
                       backgroundColor: const Color(0XFFEF8262),

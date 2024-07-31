@@ -1,7 +1,7 @@
-import 'package:bookly/core/utils/functions/launch_url.dart';
 import 'package:bookly/core/widgets/custom_button.dart';
 import 'package:bookly/features/home/data/models/book_model/book_model.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BooksAction extends StatelessWidget {
   const BooksAction({super.key, required this.bookModel});
@@ -29,8 +29,12 @@ class BooksAction extends StatelessWidget {
           ),
           Expanded(
             child: CustomButton(
-              onPressed: () {
-                launchCustomUrl(context, bookModel.volumeInfo.previewLink);
+              onPressed: () async {
+                Uri uri = Uri.parse(bookModel.volumeInfo.previewLink!);
+                if (!await launchUrl(uri)) {
+                  await canLaunchUrl(uri);
+                  throw Exception('Could not launch $uri');
+                }
               },
               fontSize: 16,
               backgroundColor: const Color(0XFFEF8262),
